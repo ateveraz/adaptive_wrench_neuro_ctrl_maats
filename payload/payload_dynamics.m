@@ -8,8 +8,8 @@ classdef payload_dynamics < matlab.System
     properties (Access = public)
         mass = 0.225;
         inertia_matrix = diag([2.1,1.87,3.97]) * 0.01;
-        Rattach = zeros(3,4);
-        N = 4;
+        Rattach = [ 0.5, -0.5; 0.0,  0.0; 0.0,  0.0 ];
+        N = 2;
     end
 
     methods (Access = protected)
