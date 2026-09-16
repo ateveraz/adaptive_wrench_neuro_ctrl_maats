@@ -71,9 +71,10 @@ classdef payload_dynamics < matlab.System
 
         function wp_dot = attitudeDynamics(obj, qp, T, Alpha, w)
             M = zeros(3,1);
+            %ToDo: Verify sign !
 
             for i = 1:size(Alpha,2)
-                fiP = obj.rotate_by_quat_conj(qp, T(i) * Alpha(:,i));
+                fiP = obj.rotate_by_quat_conj(qp, -T(i) * Alpha(:,i));
                 M = M + cross(obj.Rattach(:,i), fiP);
             end
 
@@ -92,7 +93,8 @@ classdef payload_dynamics < matlab.System
             for i = 1:size(Alpha,2)
                 F = F - T(i) * Alpha(:,i);
 
-                fiP = obj.rotate_by_quat_conj(qp, T(i) * Alpha(:,i));
+                %ToDo: Verify sign !
+                fiP = obj.rotate_by_quat_conj(qp, - T(i) * Alpha(:,i));
                 M = M + cross(obj.Rattach(:,i), fiP);
             end
 
