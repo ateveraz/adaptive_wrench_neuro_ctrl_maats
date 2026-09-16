@@ -108,3 +108,7 @@ Kd1 = 2; Alpha1 = 6; Gamma1 = 0;
 % Kd4 = 5; Alpha4 = 1; Gamma4 = 0;
 
 %sim('simulator.slx');
+
+%% Init buses
+initBus_quadrotor_state;
+initBus_payload_state;
