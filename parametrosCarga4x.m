@@ -5,7 +5,7 @@ addpath('general/', 'uav/', 'payload/', 'payload_control/',  'trajectory/')
 % Position control
 pos_ctrl = struct;
 pos_ctrl.Kd = 2;
-pos_ctrl.alpha = 6;
+pos_ctrl.alpha = 6; % 6 % 2
 pos_ctrl.mass = 0.4;
 % Attitude control
 att_ctrl = struct;
@@ -90,6 +90,7 @@ uav2.initial_position = [-Lb/2;
 %% Initialize buses
 initBus_quadrotor_state;
 initBus_payload_state;
+initBus_payload_reference;
 
 %% Maybe I will remove it frome here ! 
 % Datos Dinámica

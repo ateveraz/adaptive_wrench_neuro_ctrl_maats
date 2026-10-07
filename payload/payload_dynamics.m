@@ -18,7 +18,7 @@ classdef payload_dynamics < matlab.System
         end
 
         function [wc, xpp, wp_dot, quatp] = stepImpl(obj, T, Alpha, w, qp)
-            wc     = obj.computeWrench(qp, T, Alpha);
+            wc     = zeros(6,1); %obj.computeWrench(qp, T, Alpha);
             xpp    = obj.cartesianDynamics(T, Alpha);
             wp_dot = obj.attitudeDynamics(qp, T, Alpha, w);
             quatp  = obj.w2qtp(qp, w);
