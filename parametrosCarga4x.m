@@ -1,5 +1,5 @@
 clearvars; close all; clc;
-addpath('general/', 'uav/', 'payload/')
+addpath('general/', 'uav/', 'payload/', 'payload_control/',  'trajectory/')
 
 %% General control tuning 
 % Position control
