@@ -12,7 +12,7 @@ classdef uav_reference_regulator < matlab.System
     properties (Access = public)
         N = 2;
         Rattach = [0.5 -0.5; 0 0; 0 0];
-        CableLengths = [0.8; 0.8];
+        CableLengths = 0.8;
         Alpha_d = [0 0; 0 0; 1 1];
     end
 
@@ -51,7 +51,7 @@ classdef uav_reference_regulator < matlab.System
                 % alpha_i,d is constant in this regulation block:
                 % dot(alpha_i,d) = 0.
                 Xuav_d(:,i) = xai_d - ...
-                    obj.CableLengths(i)*alpha_i_d;
+                    obj.CableLengths*alpha_i_d;
                 Vuav_d(:,i) = vai_d;
 
                 % Desired cable force acting on UAV i, in I.
