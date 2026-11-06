@@ -85,15 +85,21 @@ classdef neuro_payload_controller < matlab.System
             % Known feedforward: wff = [mp*(xdd_d - g*e3); 0].
             wff = [obj.mass*(xdpp(:) - 9.81*[0; 0; 1]); zeros(3, 1)];
 
-            wc_raw = -obj.S*(obj.Ks*sp) + obj.S*(obj.S.'*wff) ...
-                     - obj.S*Delta_hat;
+            % wc_raw = -obj.S*(obj.Ks*sp) + obj.S*(obj.S.'*wff) - obj.S*Delta_hat;
+            % size(wff);
+
+            % size(sp);
+
+            % size(obj.Ks)
+            
+            wc_raw = -obj.Ks*sp + wff; % - obj.S*Delta_hat;
         end
 
         function [a, b, c, d, e] = getOutputSizeImpl(obj)
             r = size(obj.S, 2);
             m = size(obj.V, 1);
             a = [6 1];
-            b = [r 1];
+            b = [6 1];
             c = [r 1];
             d = [size(obj.V, 2) 1];
             e = [m r];
@@ -149,7 +155,8 @@ classdef neuro_payload_controller < matlab.System
 
             sbar = [ev + obj.Lambda_x*ex;
                     ew + obj.Lambda_R*eR];
-            sp = obj.S.' * sbar;
+            % sp = obj.S.' * sbar;
+            sp = sbar;
 
             % Regressor on the controllable coordinates.
             e_pos = [ex; eR];
