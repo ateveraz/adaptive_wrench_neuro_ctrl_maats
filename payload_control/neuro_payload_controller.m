@@ -33,7 +33,7 @@ classdef neuro_payload_controller < matlab.System
         mass = 0.225;
         S = [0 0; 0 0; 1 0; 0 0; 0 1; 0 0];   
 
-        Ks = diag([4.0, 0.25]);
+        Ks = eye(6);
         Lambda_x = diag([0, 0, 1.5]);
         Lambda_R = diag([0, 2.0, 0]);
 
@@ -68,41 +68,34 @@ classdef neuro_payload_controller < matlab.System
 
         function [wc_raw, sp, Delta_hat, zeta, What_dot] = stepImpl(obj, xd, xdp, xdpp, qd, omegad, payload, What)
 
-            r = size(obj.S, 2);
+            % r = size(obj.S, 2);
 
             [sp, zeta] = obj.computeManifold(xd, xdp, qd, omegad, payload);
             Phi = obj.features(zeta);
             
+            % sp_r = obj.S.' * sp;                                   % r x 1
+
             if obj.UseNeuro
-                Delta_hat = What.' * Phi;
-                % Delta_hat = min(max(Delta_hat, -obj.DeltaMax(:)), obj.DeltaMax(:));
-                What_dot = (obj.Gamma*(Phi*sp.') - obj.Mu*What);
+                Delta_hat = What.' * Phi;                          % r x 1
+                % What_dot  = obj.Gamma*(Phi*sp_r.') - obj.Mu*What;  % m x r
+                What_dot  = obj.Gamma*(Phi*sp.') - obj.Mu*What;  % m x r
             else
-                Delta_hat = zeros(r, 1);
-                What_dot = zeros(size(What));
+                Delta_hat = zeros(6,1);
+                What_dot  = zeros(size(What));
             end
-
-            % Known feedforward: wff = [mp*(xdd_d - g*e3); 0].
-            wff = [obj.mass*(xdpp(:) - 9.81*[0; 0; 1]); zeros(3, 1)];
-
-            % wc_raw = -obj.S*(obj.Ks*sp) + obj.S*(obj.S.'*wff) - obj.S*Delta_hat;
-            % size(wff);
-
-            % size(sp);
-
-            % size(obj.Ks)
             
-            wc_raw = -obj.Ks*sp + wff; % - obj.S*Delta_hat;
+            wff    = [obj.mass*(xdpp(:) - 9.81*[0;0;1]); zeros(3,1)];
+            wc_raw = -obj.Ks*sp + wff + Delta_hat;           % 6x1 (S solo en el neuro)
         end
 
         function [a, b, c, d, e] = getOutputSizeImpl(obj)
-            r = size(obj.S, 2);
-            m = size(obj.V, 1);
+            % r = size(obj.S, 2);
+            % m = size(obj.V, 1);
             a = [6 1];
             b = [6 1];
-            c = [r 1];
-            d = [size(obj.V, 2) 1];
-            e = [m r];
+            c = [6 1];
+            d = [6 1];
+            e = [6 6];
         end
 
         function [a, b, c, d, e] = getOutputDataTypeImpl(~)
@@ -123,8 +116,8 @@ classdef neuro_payload_controller < matlab.System
 
         function Phi = features(obj, zeta)
             zn = zeta(:); % ./ obj.ZetaScale(:);
-            Phi = tanh(obj.V*zn);          % m0 x 1, in (-1,1)
-            % Phi = tanh(zn);
+            % Phi = tanh(obj.V*zn);          % m0 x 1, in (-1,1)
+            Phi = tanh(zn);
             % 
             % if obj.UseBias
             %     Phi = [Phi; 1.0];
@@ -159,9 +152,10 @@ classdef neuro_payload_controller < matlab.System
             sp = sbar;
 
             % Regressor on the controllable coordinates.
-            e_pos = [ex; eR];
-            e_vel = [ev; ew];
-            zeta = [obj.S.' * e_pos; obj.S.' * e_vel];
+            % e_pos = [ex; eR];
+            % e_vel = [ev; ew];
+            % zeta = [obj.S.' * e_pos; obj.S.' * e_vel];
+            zeta = sbar; %[e_pos; e_vel];
         end
 
         function q = normalize_quat(~, q)
