@@ -95,5 +95,5 @@ payload_ctrl.Lambda_att = diag( [ 0, 2.0, 0 ] );
 
 
 %% Run simulator and see visualization
-% out = sim("simulator_maats_wrench.slx");
-% visualizer( out.logsout, 'Rattach', payload.Rattach, 'ShowTrajectories', true, 'DroneSize', 100, 'FrameStride', 20);
+out = sim("simulator_maats_wrench.slx");
+visualizer( out.logsout, 'Rattach', payload.Rattach, 'ShowTrajectories', true, 'DroneSize', 100, 'FrameStride', 20);
