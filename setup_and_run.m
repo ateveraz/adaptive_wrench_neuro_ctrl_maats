@@ -53,7 +53,9 @@ payload.Rattach = [ ...
 payload.initial_position = [0 0 0]';
 payload.initial_linear_velocity = [0 0 0]';
 payload.initial_angular_velocity = [0 0 0]';
-payload.initial_quaternion = [1 0 0 0]';
+yaw0 = deg2rad(0);
+payload.initial_quaternion = [cos(0.5*yaw0) 0 sin(0.5*yaw0) 0]';
+% payload.initial_quaternion = [1 0 0 0]';
 
 %% Initial position of UAVs
 uav1 = uav;

@@ -94,8 +94,8 @@ classdef neuro_payload_controller < matlab.System
             a = [6 1];
             b = [6 1];
             c = [6 1];
-            d = [6 1];
-            e = [6 6];
+            d = [7 1];
+            e = [7 6];
         end
 
         function [a, b, c, d, e] = getOutputDataTypeImpl(~)
@@ -155,7 +155,7 @@ classdef neuro_payload_controller < matlab.System
             % e_pos = [ex; eR];
             % e_vel = [ev; ew];
             % zeta = [obj.S.' * e_pos; obj.S.' * e_vel];
-            zeta = sbar; %[e_pos; e_vel];
+            zeta = [sbar; 1]; %[e_pos; e_vel];
         end
 
         function q = normalize_quat(~, q)
